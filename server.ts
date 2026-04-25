@@ -16,7 +16,7 @@ async function startServer() {
 
   // Basic route
   app.get("/", (req, res) => {
-    res.send("Backend working 🚀");
+    res.send("Backend working again 🚀");
   });
 
   // API Routes

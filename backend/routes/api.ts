@@ -47,8 +47,24 @@ router.get("/shops", getShops);
 router.get("/shops/:id", getShopById);
 router.post("/shops", authenticateToken, createShop);
 
-// Offers
-router.get("/offers", getOffers);
+// Offers - Hardcoded as requested
+router.get("/offers", (req, res) => {
+  res.json([
+    {
+      id: 1,
+      title: "50% off Pizza",
+      shop: "Pizza Hub",
+      distance: "2 km"
+    },
+    {
+      id: 2,
+      title: "30% off Clothes",
+      shop: "Fashion Store",
+      distance: "1 km"
+    }
+  ]);
+});
+// router.get("/offers", getOffers); // Original real route
 router.post("/offers", authenticateToken, createOffer);
 router.post("/offers/:id/view", trackView);
 
