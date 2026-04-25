@@ -1,0 +1,6 @@
+{
+  "name": "Local Deals Finder",
+  "description": "Find and share the best offers from local shops in your area with real-time location filtering.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": []
+}

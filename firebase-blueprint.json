@@ -1,0 +1,84 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "App user information",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "format": "email" },
+        "passwordHash": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["email", "passwordHash", "createdAt", "updatedAt"]
+    },
+    "Shop": {
+      "title": "Shop",
+      "description": "Local shop details",
+      "type": "object",
+      "properties": {
+        "ownerId": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "address": { "type": "string" },
+        "lat": { "type": "number" },
+        "lng": { "type": "number" },
+        "geohash": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["ownerId", "name", "lat", "lng", "geohash", "createdAt", "updatedAt"]
+    },
+    "Offer": {
+      "title": "Offer",
+      "description": "Deal or offer from a shop",
+      "type": "object",
+      "properties": {
+        "shopId": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "price": { "type": "number" },
+        "originalPrice": { "type": "number" },
+        "discount": { "type": "number" },
+        "expiryDate": { "type": "string", "format": "date-time" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "viewsCount": { "type": "integer" },
+        "clicksCount": { "type": "integer" },
+        "lat": { "type": "number" },
+        "lng": { "type": "number" },
+        "geohash": { "type": "string" }
+      },
+      "required": ["shopId", "title", "price", "createdAt", "updatedAt", "lat", "lng", "geohash"]
+    },
+    "Favorite": {
+      "title": "Favorite",
+      "description": "User's favorite offer",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "offerId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "offerId", "createdAt"]
+    }
+  },
+  "firestore": {
+    "users/{userId}": {
+      "schema": "User",
+      "description": "User profiles and credentials"
+    },
+    "shops/{shopId}": {
+      "schema": "Shop",
+      "description": "Shops registered in the system"
+    },
+    "offers/{offerId}": {
+      "schema": "Offer",
+      "description": "Deals and offers available"
+    },
+    "favorites/{favoriteId}": {
+      "schema": "Favorite",
+      "description": "Mapping of users to their favorite offers"
+    }
+  }
+}
