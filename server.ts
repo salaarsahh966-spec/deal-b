@@ -14,16 +14,32 @@ async function startServer() {
   app.use(cors());
   app.use(express.json());
 
+  // Basic route
+  app.get("/", (req, res) => {
+    res.send("Backend working 🚀");
+  });
+
   // API Routes
   app.use("/api", apiRoutes);
 
   app.get("/api/health", async (req, res) => {
     try {
       const { dbAdmin } = await import("./backend/lib/firebase-admin.ts");
-      await dbAdmin.collection("test_connection").limit(1).get();
-      res.json({ status: "ok", database: "connected" });
+      const { getDocs, collection } = await import("firebase/firestore");
+      // Just try to get one doc from 'offers' or any collection
+      await getDocs(collection(dbAdmin, "offers"));
+      res.json({ 
+        status: "ok", 
+        database: "connected"
+      });
     } catch (error: any) {
-      res.status(500).json({ status: "error", message: error.message });
+      console.error("Health check failed:", error);
+      res.status(500).json({ 
+        status: "error", 
+        message: error.message,
+        code: error.code,
+        details: error.details
+      });
     }
   });
 

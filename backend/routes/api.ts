@@ -1,11 +1,11 @@
 import express from "express";
-import admin from "firebase-admin";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { signup, login, me } from "../controllers/authController.ts";
 import { getShops, createShop, getShopById } from "../controllers/shopController.ts";
 import { getOffers, createOffer, trackView } from "../controllers/offerController.ts";
 import { addFavorite, getFavorites, removeFavorite } from "../controllers/favoriteController.ts";
 import { authenticateToken } from "../middleware/auth.ts";
-import { dbAdmin } from "../lib/firebase-admin.ts";
+import { dbAdmin as db } from "../lib/firebase-admin.ts";
 import { geohashForLocation } from "geofire-common";
 
 const router = express.Router();
@@ -22,13 +22,13 @@ router.post("/seed", async (req, res) => {
 
         for (const off of dummyOffers) {
             const geohash = geohashForLocation([off.lat, off.lng]);
-            await dbAdmin.collection("offers").add({
+            await addDoc(collection(db, "offers"), {
                 ...off,
                 discount: Math.round(((off.originalPrice - off.price) / off.originalPrice) * 100),
                 geohash,
                 viewsCount: Math.floor(Math.random() * 500),
-                createdAt: admin.firestore.FieldValue.serverTimestamp(),
-                updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                createdAt: serverTimestamp(),
+                updatedAt: serverTimestamp(),
             });
         }
         res.json({ success: true, message: "Seeded 4 offers" });

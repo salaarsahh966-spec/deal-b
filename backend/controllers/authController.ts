@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import admin from "firebase-admin";
-import { dbAdmin } from "../lib/firebase-admin.ts";
+import { collection, query, where, getDocs, addDoc, serverTimestamp } from "firebase/firestore";
+import { dbAdmin as db } from "../lib/firebase-admin.ts";
 
 const JWT_SECRET = process.env.JWT_SECRET || "default_secret";
 
@@ -11,7 +11,8 @@ export const signup = async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
     // Check if user exists
-    const querySnapshot = await dbAdmin.collection("users").where("email", "==", email).get();
+    const q = query(collection(db, "users"), where("email", "==", email));
+    const querySnapshot = await getDocs(q);
     if (!querySnapshot.empty) {
       return res.status(400).json({ success: false, message: "User already exists" });
     }
@@ -22,11 +23,11 @@ export const signup = async (req: Request, res: Response) => {
     const userData = {
       email,
       passwordHash,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
     };
 
-    const docRef = await dbAdmin.collection("users").add(userData);
+    const docRef = await addDoc(collection(db, "users"), userData);
     
     const token = jwt.sign({ userId: docRef.id, email }, JWT_SECRET, { expiresIn: "7d" });
     res.json({ success: true, data: { token, userId: docRef.id, email } });
@@ -39,7 +40,8 @@ export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
 
-    const querySnapshot = await dbAdmin.collection("users").where("email", "==", email).get();
+    const q = query(collection(db, "users"), where("email", "==", email));
+    const querySnapshot = await getDocs(q);
     
     if (querySnapshot.empty) {
       return res.status(400).json({ success: false, message: "Invalid credentials" });

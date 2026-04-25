@@ -1,6 +1,13 @@
 import { Response } from "express";
-import admin from "firebase-admin";
-import { dbAdmin } from "../lib/firebase-admin.ts";
+import { 
+  collection, 
+  addDoc, 
+  getDocs, 
+  serverTimestamp, 
+  doc, 
+  getDoc 
+} from "firebase/firestore";
+import { dbAdmin as db } from "../lib/firebase-admin.ts";
 import { AuthRequest } from "../middleware/auth.ts";
 import { geohashForLocation } from "geofire-common";
 
@@ -23,11 +30,11 @@ export const createShop = async (req: AuthRequest, res: Response) => {
       lat: latitude,
       lng: longitude,
       geohash: geohashValue,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
     };
 
-    const docRef = await dbAdmin.collection("shops").add(shopData);
+    const docRef = await addDoc(collection(db, "shops"), shopData);
     res.json({ success: true, data: { id: docRef.id, ...shopData } });
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
@@ -36,7 +43,7 @@ export const createShop = async (req: AuthRequest, res: Response) => {
 
 export const getShops = async (req: AuthRequest, res: Response) => {
   try {
-    const querySnapshot = await dbAdmin.collection("shops").get();
+    const querySnapshot = await getDocs(collection(db, "shops"));
     const shops = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     res.json({ success: true, data: shops });
   } catch (error: any) {
@@ -46,9 +53,9 @@ export const getShops = async (req: AuthRequest, res: Response) => {
 
 export const getShopById = async (req: AuthRequest, res: Response) => {
   try {
-    const docRef = dbAdmin.collection("shops").doc(req.params.id);
-    const docSnap = await docRef.get();
-    if (docSnap.exists) {
+    const docRef = doc(db, "shops", req.params.id);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
       res.json({ success: true, data: { id: docSnap.id, ...docSnap.data() } });
     } else {
       res.status(404).json({ success: false, message: "Shop not found" });
