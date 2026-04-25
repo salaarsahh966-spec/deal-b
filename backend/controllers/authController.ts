@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import admin from "firebase-admin";
-import { dbAdmin } from "../lib/firebase-admin";
+import { dbAdmin } from "../lib/firebase-admin.ts";
 
 const JWT_SECRET = process.env.JWT_SECRET || "default_secret";
 

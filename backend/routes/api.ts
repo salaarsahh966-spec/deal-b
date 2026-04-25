@@ -1,11 +1,11 @@
 import express from "express";
 import admin from "firebase-admin";
-import { signup, login, me } from "../controllers/authController";
-import { getShops, createShop, getShopById } from "../controllers/shopController";
-import { getOffers, createOffer, trackView } from "../controllers/offerController";
-import { addFavorite, getFavorites, removeFavorite } from "../controllers/favoriteController";
-import { authenticateToken } from "../middleware/auth";
-import { dbAdmin } from "../lib/firebase-admin";
+import { signup, login, me } from "../controllers/authController.ts";
+import { getShops, createShop, getShopById } from "../controllers/shopController.ts";
+import { getOffers, createOffer, trackView } from "../controllers/offerController.ts";
+import { addFavorite, getFavorites, removeFavorite } from "../controllers/favoriteController.ts";
+import { authenticateToken } from "../middleware/auth.ts";
+import { dbAdmin } from "../lib/firebase-admin.ts";
 import { geohashForLocation } from "geofire-common";
 
 const router = express.Router();

@@ -1,7 +1,7 @@
 import { Response } from "express";
 import admin from "firebase-admin";
-import { dbAdmin } from "../lib/firebase-admin";
-import { AuthRequest } from "../middleware/auth";
+import { dbAdmin } from "../lib/firebase-admin.ts";
+import { AuthRequest } from "../middleware/auth.ts";
 
 export const addFavorite = async (req: AuthRequest, res: Response) => {
   try {

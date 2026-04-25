@@ -3,7 +3,7 @@ import path from "path";
 import { createServer as createViteServer } from "vite";
 import cors from "cors";
 import dotenv from "dotenv";
-import apiRoutes from "./backend/routes/api";
+import apiRoutes from "./backend/routes/api.ts";
 
 dotenv.config();
 
@@ -19,7 +19,7 @@ async function startServer() {
 
   app.get("/api/health", async (req, res) => {
     try {
-      const { dbAdmin } = await import("./backend/lib/firebase-admin");
+      const { dbAdmin } = await import("./backend/lib/firebase-admin.ts");
       await dbAdmin.collection("test_connection").limit(1).get();
       res.json({ status: "ok", database: "connected" });
     } catch (error: any) {
