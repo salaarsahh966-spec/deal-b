@@ -11,12 +11,12 @@ async function startServer() {
   const app = express();
   const PORT = 3000;
 
-  app.use(cors());
+  // middleware
   app.use(express.json());
 
-  // Basic route
+  // test route
   app.get("/", (req, res) => {
-    res.send("Backend working again 🚀");
+    res.send("Backend stable 🚀");
   });
 
   // API Routes
